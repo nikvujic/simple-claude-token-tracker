@@ -6,11 +6,20 @@ REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 echo "[token-panel] Installing Claude Token Usage Panel..."
 
 # 1. VS Code extension
-VSIX="$REPO_DIR/vscode-extension/simple-claude-token-tracker-1.0.0.vsix"
 if ! command -v code &>/dev/null; then
   echo "[token-panel] ERROR: 'code' command not found. Open VS Code and enable 'Install code command in PATH' from the command palette."
   exit 1
 fi
+
+VSIX="$REPO_DIR/vscode-extension/simple-claude-token-tracker-1.0.0.vsix"
+if [ ! -f "$VSIX" ]; then
+  echo "[token-panel] Building VS Code extension..."
+  if ! command -v vsce &>/dev/null; then
+    npm install -g @vscode/vsce --silent
+  fi
+  (cd "$REPO_DIR/vscode-extension" && vsce package --allow-missing-repository --no-dependencies 2>/dev/null)
+fi
+
 echo "[token-panel] Installing VS Code extension..."
 code --install-extension "$VSIX"
 
