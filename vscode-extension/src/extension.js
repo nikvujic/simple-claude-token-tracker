@@ -37,6 +37,13 @@ function openPanel(port, context) {
     { enableScripts: true, retainContextWhenHidden: true }
   );
   panel.webview.html = getWebviewContent(port);
+  panel.webview.onDidReceiveMessage((msg) => {
+    if (msg.type === 'startServer') {
+      ensureServer(port).then(() => {
+        if (panel) panel.webview.postMessage({ type: 'serverStarted' });
+      });
+    }
+  }, null, context.subscriptions);
   panel.onDidDispose(() => { panel = null; }, null, context.subscriptions);
 }
 
@@ -174,6 +181,23 @@ function getWebviewContent(port) {
     display: none;
   }
   .cap-detail.visible { display: block; }
+
+  /* ── Disconnected banner ── */
+  #disconnected-banner {
+    display: none;
+    background: rgba(244,135,113,0.08);
+    border: 1px solid rgba(244,135,113,0.4);
+    border-radius: 6px;
+    padding: 7px 12px;
+    font-size: 12px;
+    color: #f48771;
+    flex-shrink: 0;
+    display: none;
+    align-items: center;
+    gap: 8px;
+  }
+  #disconnected-banner.visible { display: flex; }
+  #disconnected-banner span { flex: 1; }
 
   /* ── Limit banner ── */
   #limit-banner {
@@ -408,6 +432,12 @@ function getWebviewContent(port) {
     <button class="clear-btn" onclick="toggleHistory()" id="history-btn">History</button>
     <button class="clear-btn" onclick="toggleCapManager()" id="cap-mgr-btn">Manage cap</button>
   </div>
+</div>
+
+<!-- Disconnected banner -->
+<div id="disconnected-banner">
+  <span>Not connected — reconnecting…</span>
+  <button class="clear-btn" style="margin-left:0" onclick="startServer()">Start server</button>
 </div>
 
 <!-- History panel -->
@@ -712,6 +742,7 @@ function getWebviewContent(port) {
 
     ws.onopen = () => {
       dot.className = 'connected';
+      document.getElementById('disconnected-banner').classList.remove('visible');
       clearTimeout(reconnectTimer);
     };
 
@@ -727,9 +758,23 @@ function getWebviewContent(port) {
 
     ws.onclose = ws.onerror = () => {
       dot.className = 'error';
+      document.getElementById('disconnected-banner').classList.add('visible');
       reconnectTimer = setTimeout(connect, 3000);
     };
   }
+
+  const vscode = acquireVsCodeApi();
+
+  function startServer() {
+    vscode.postMessage({ type: 'startServer' });
+  }
+
+  window.addEventListener('message', (e) => {
+    if (e.data.type === 'serverStarted') {
+      clearTimeout(reconnectTimer);
+      connect();
+    }
+  });
 
   connect();
 </script>
