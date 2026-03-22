@@ -18,6 +18,8 @@ code --install-extension "$VSIX"
 echo "[token-panel] Installing skill..."
 mkdir -p ~/.claude/skills
 cp -r "$REPO_DIR/skill/token-usage-panel" ~/.claude/skills/
+echo "[token-panel] Installing skill dependencies..."
+(cd ~/.claude/skills/token-usage-panel && npm install --omit=dev --silent)
 
 # 3. Hook in ~/.claude/settings.json
 echo "[token-panel] Registering Stop hook..."

@@ -1,0 +1,8 @@
+{
+  "name": "token-usage-panel",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}
