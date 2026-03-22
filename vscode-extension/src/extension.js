@@ -87,6 +87,7 @@ function getWebviewContent(port) {
     width: 7px; height: 7px; border-radius: 50%;
     background: #666; flex-shrink: 0;
     transition: background 0.3s;
+    margin-top: 1px;
   }
   #status-dot.connected { background: #4ec9b0; }
   #status-dot.error     { background: #f48771; }
