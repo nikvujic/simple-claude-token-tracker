@@ -58,6 +58,14 @@ rm -rf ~/.claude/token-usage
 ```
 
 
+## Usage
+
+The panel opens automatically when VS Code starts. If you close it, reopen it from the command palette:
+
+```
+Ctrl+Shift+P - Claude: Open Token Usage Panel
+```
+
 ## How it works
 
 The panel opens automatically when VS Code starts. After each Claude response, a hook reads token usage from the session transcript and sends it to a local WebSocket server (port 7823), which forwards it to the panel. Usage is also written to a daily log file so totals survive restarts.
