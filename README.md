@@ -18,7 +18,7 @@ Clone the repo into any temporary directory, run the install script, then delete
 Open Claude Code in any directory and say:
 
 ```
-Clone https://github.com/nikvujic/simple-claude-token-tracker into /tmp/token-panel, then run /tmp/token-panel/install.sh, then delete /tmp/token-panel
+clone https://github.com/nikvujic/simple-claude-token-tracker into /tmp/token-panel, then run /tmp/token-panel/install.sh, then delete /tmp/token-panel
 ```
 
 ### Option B: Manual
@@ -47,6 +47,9 @@ code --uninstall-extension nikvujic.simple-claude-token-tracker
 
 # Remove the skill
 rm -rf ~/.claude/skills/token-usage-panel
+
+# Stop the background server
+kill $(lsof -ti:7823) 2>/dev/null
 
 # Remove the hook from ~/.claude/settings.json (remove the "Stop" hook entry)
 
