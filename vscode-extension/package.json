@@ -1,0 +1,29 @@
+{
+  "name": "simple-claude-token-tracker",
+  "displayName": "Simple Claude Token Tracker",
+  "description": "Live token usage dashboard for Claude Code",
+  "version": "1.0.0",
+  "publisher": "nikvujic",
+  "engines": { "vscode": "^1.85.0" },
+  "categories": ["Other"],
+  "activationEvents": ["onStartupFinished"],
+  "main": "./src/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "claude-token-panel.open",
+        "title": "Claude: Open Token Usage Panel"
+      }
+    ],
+    "configuration": {
+      "title": "Claude Token Panel",
+      "properties": {
+        "claudeTokenPanel.serverPort": {
+          "type": "number",
+          "default": 7823,
+          "description": "Port the token-panel skill server runs on"
+        }
+      }
+    }
+  }
+}
